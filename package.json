@@ -1,5 +1,5 @@
 {
-  "name": "equation-resolver",
+  "name": "@jacksontian/equation-resolver",
   "version": "1.0.0",
   "type": "module",
   "description": "解方程程序",
@@ -16,7 +16,12 @@
     "equation",
     "solver"
   ],
-  "author": "",
+  "author": "Jackson Tian",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JacksonTian/equation-resolver.git"
+  },
+  "homepage": "https://github.com/JacksonTian/equation-resolver",
   "license": "MIT",
   "devDependencies": {
     "c8": "^8.0.1"
