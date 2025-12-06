@@ -1,0 +1,24 @@
+{
+  "name": "equation-resolver",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "解方程程序",
+  "main": "lib/solve.js",
+  "bin": {
+    "solve": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "node --test test/test.js",
+    "test:coverage": "c8 npm run test",
+    "test:coverage:report": "c8 --reporter=html --reporter=text npm run test"
+  },
+  "keywords": [
+    "equation",
+    "solver"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "c8": "^8.0.1"
+  }
+}
