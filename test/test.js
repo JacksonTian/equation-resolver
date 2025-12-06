@@ -53,11 +53,11 @@ test('正常测试用例', async (t) => {
     await t.test(testCase.description, () => {
       const result = solveEquation(testCase.equation);
       const tolerance = testCase.tolerance || 0.0001;
-      const diff = Math.abs(result - testCase.expected);
+      const diff = Math.abs(result.value - testCase.expected);
       
       assert.ok(
         diff <= tolerance,
-        `${testCase.equation}: 期望 ${testCase.expected}, 实际 ${result}, 差异 ${diff}`
+        `${testCase.equation}: 期望 ${testCase.expected}, 实际 ${result.value}, 差异 ${diff}`
       );
     });
   }

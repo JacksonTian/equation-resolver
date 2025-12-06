@@ -10,11 +10,8 @@ function main() {
   if (args.length > 0) {
     const equation = args.join(' ');
     try {
-      // 提取变量名
-      const variableMatch = equation.match(/[a-z]/i);
-      const variable = variableMatch ? variableMatch[0] : 'x';
       const result = solveEquation(equation);
-      console.log(`${variable} = ${result}`);
+      console.log(`${result.variable} = ${result.value}`);
     } catch (error) {
       console.error('错误:', error.message);
       process.exit(1);
@@ -47,11 +44,8 @@ function main() {
     }
     
     try {
-      // 提取变量名
-      const variableMatch = input.match(/[a-z]/i);
-      const variable = variableMatch ? variableMatch[0] : 'x';
       const result = solveEquation(input);
-      console.log(`${variable} = ${result}\n`);
+      console.log(`${result.variable} = ${result.value}\n`);
     } catch (error) {
       console.error('错误:', error.message, '\n');
     }
