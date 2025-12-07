@@ -137,10 +137,12 @@ describe('solveEquation', () => {
     });
 
     describe('多变量', () => {
-      it('多变量方程（只求解第一个变量）', () => {
-        const { value, variable } = solveEquation('2x(3y-4)=4y-7(4-y)');
-        assert.strictEqual(variable, 'x');
-        assertApproximatelyEqual(value, 3.5);
+      it('多变量方程需要方程组', () => {
+        assert.throws(
+          () => solveEquation('x + y + z = 1'),
+          (error) => error.message.includes('需要提供方程组'),
+          '应该提示需要方程组'
+        );
       });
     });
   });
@@ -149,10 +151,8 @@ describe('solveEquation', () => {
     it('恒等式', () => {
       assert.throws(
         () => solveEquation('2x = 2x'),
-        (error) => {
-          return error.message.includes('方程有无数解') ||
-            '方程有无数解'.includes(error.message);
-        },
+        (error) => error.message.includes('方程有无数解') ||
+            '方程有无数解'.includes(error.message),
         '应该抛出包含 "方程有无数解" 的错误'
       );
     });
@@ -160,10 +160,8 @@ describe('solveEquation', () => {
     it('矛盾方程', () => {
       assert.throws(
         () => solveEquation('2x = 2x + 1'),
-        (error) => {
-          return error.message.includes('方程无解') ||
-            '方程无解'.includes(error.message);
-        },
+        (error) => error.message.includes('方程无解') ||
+            '方程无解'.includes(error.message),
         '应该抛出包含 "方程无解" 的错误'
       );
     });
@@ -171,10 +169,8 @@ describe('solveEquation', () => {
     it('无等号', () => {
       assert.throws(
         () => solveEquation('2x'),
-        (error) => {
-          return error.message.includes('语法分析失败') ||
-            '语法分析失败'.includes(error.message);
-        },
+        (error) => error.message.includes('语法分析失败') ||
+            '语法分析失败'.includes(error.message),
         '应该抛出包含 "语法分析失败" 的错误'
       );
     });
@@ -182,10 +178,8 @@ describe('solveEquation', () => {
     it('无左侧', () => {
       assert.throws(
         () => solveEquation('= 5'),
-        (error) => {
-          return error.message.includes('未找到变量') ||
-            '未找到变量'.includes(error.message);
-        },
+        (error) => error.message.includes('未找到变量') ||
+            '未找到变量'.includes(error.message),
         '应该抛出包含 "未找到变量" 的错误'
       );
     });
@@ -193,10 +187,8 @@ describe('solveEquation', () => {
     it('无右侧', () => {
       assert.throws(
         () => solveEquation('2x ='),
-        (error) => {
-          return error.message.includes('语法分析失败') ||
-            '语法分析失败'.includes(error.message);
-        },
+        (error) => error.message.includes('语法分析失败') ||
+            '语法分析失败'.includes(error.message),
         '应该抛出包含 "语法分析失败" 的错误'
       );
     });
@@ -281,9 +273,7 @@ describe('solveSystem', () => {
     it('方程数量少于变量数量', () => {
       assert.throws(
         () => solveSystem('x + y = 5'),
-        (error) => {
-          return error.message.includes('方程数量') && error.message.includes('少于变量数量');
-        },
+        (error) => error.message.includes('方程数量') && error.message.includes('少于变量数量'),
         '应该抛出关于方程数量不足的错误'
       );
     });
@@ -291,9 +281,7 @@ describe('solveSystem', () => {
     it('无方程', () => {
       assert.throws(
         () => solveSystem(''),
-        (error) => {
-          return error.message.includes('未提供方程');
-        },
+        (error) => error.message.includes('未提供方程'),
         '应该抛出未提供方程的错误'
       );
     });
@@ -301,9 +289,7 @@ describe('solveSystem', () => {
     it('无变量', () => {
       assert.throws(
         () => solveSystem('2 = 2; 3 = 3'),
-        (error) => {
-          return error.message.includes('未找到变量');
-        },
+        (error) => error.message.includes('未找到变量'),
         '应该抛出未找到变量的错误'
       );
     });
@@ -311,9 +297,7 @@ describe('solveSystem', () => {
     it('方程组无解', () => {
       assert.throws(
         () => solveSystem('x + y = 5; x + y = 10'),
-        (error) => {
-          return error.message.includes('无解');
-        },
+        (error) => error.message.includes('无解'),
         '应该抛出无解的错误'
       );
     });
@@ -321,9 +305,7 @@ describe('solveSystem', () => {
     it('语法错误', () => {
       assert.throws(
         () => solveSystem('x + y = 5; x + y'),
-        (error) => {
-          return error.message.includes('语法分析失败');
-        },
+        (error) => error.message.includes('语法分析失败'),
         '应该抛出语法分析失败的错误'
       );
     });

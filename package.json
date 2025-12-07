@@ -10,7 +10,9 @@
   "scripts": {
     "test": "node --test test/*.test.js",
     "test:coverage": "c8 npm run test",
-    "test:coverage:report": "c8 --reporter=html --reporter=text npm run test"
+    "test:coverage:report": "c8 --reporter=html --reporter=text npm run test",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [
     "equation",
@@ -24,6 +26,8 @@
   "homepage": "https://github.com/JacksonTian/equation-resolver",
   "license": "MIT",
   "devDependencies": {
-    "c8": "^8.0.1"
+    "@eslint/js": "^9.39.1",
+    "c8": "^8.0.1",
+    "eslint": "^9.39.1"
   }
 }
