@@ -1,17 +1,25 @@
 #!/usr/bin/env node
 
 import readline from 'readline';
-import { solveEquation } from '../lib/solve.js';
+import { solveEquation, solveSystem } from '../lib/solve.js';
 
 function main() {
   const args = process.argv.slice(2);
 
   // 如果有参数，直接求解并退出
   if (args.length > 0) {
-    const equation = args.join(' ');
+    const input = args.join(' ');
     try {
-      const result = solveEquation(equation);
-      console.log(`${result.variable} = ${result.value}`);
+      // 检查是否包含分号（方程组）
+      if (input.includes(';')) {
+        const result = solveSystem(input);
+        for (const [variable, value] of Object.entries(result)) {
+          console.log(`${variable} = ${value}`);
+        }
+      } else {
+        const result = solveEquation(input);
+        console.log(`${result.variable} = ${result.value}`);
+      }
     } catch (error) {
       console.error('错误:', error.message);
       process.exit(1);
@@ -27,7 +35,7 @@ function main() {
   });
 
   console.log('解方程 REPL 模式');
-  console.log('输入方程求解，输入 exit 或 quit 退出\n');
+  console.log('输入方程求解（用分号分隔多个方程可求解方程组），输入 exit 或 quit 退出\n');
   rl.prompt();
 
   rl.on('line', (line) => {
@@ -44,8 +52,17 @@ function main() {
     }
     
     try {
-      const result = solveEquation(input);
-      console.log(`${result.variable} = ${result.value}\n`);
+      // 检查是否包含分号（方程组）
+      if (input.includes(';')) {
+        const result = solveSystem(input);
+        for (const [variable, value] of Object.entries(result)) {
+          console.log(`${variable} = ${value}`);
+        }
+        console.log();
+      } else {
+        const result = solveEquation(input);
+        console.log(`${result.variable} = ${result.value}\n`);
+      }
     } catch (error) {
       console.error('错误:', error.message, '\n');
     }

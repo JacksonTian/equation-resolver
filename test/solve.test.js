@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { solveEquation } from '../lib/solve.js';
+import { solveEquation, solveSystem } from '../lib/solve.js';
 
 // 浮点数比较辅助函数
 function assertApproximatelyEqual(actual, expected, tolerance = 1e-10) {
@@ -198,6 +198,133 @@ describe('solveEquation', () => {
             '语法分析失败'.includes(error.message);
         },
         '应该抛出包含 "语法分析失败" 的错误'
+      );
+    });
+  });
+});
+
+describe('solveSystem', () => {
+  describe('正常测试用例', () => {
+    describe('二元一次方程组', () => {
+      it('简单二元方程组', () => {
+        const result = solveSystem('x + y = 5; x - y = 1');
+        assertApproximatelyEqual(result.x, 3);
+        assertApproximatelyEqual(result.y, 2);
+      });
+
+      it('带系数的二元方程组', () => {
+        const result = solveSystem('2x + 3y = 7; 3x - 2y = 4');
+        assertApproximatelyEqual(result.x, 2);
+        assertApproximatelyEqual(result.y, 1);
+      });
+
+      it('带负数的二元方程组', () => {
+        const result = solveSystem('x - y = 3; 2x + y = 0');
+        assertApproximatelyEqual(result.x, 1);
+        assertApproximatelyEqual(result.y, -2);
+      });
+
+      it('带小数的二元方程组', () => {
+        const result = solveSystem('0.5x + y = 2; x - 0.5y = 3');
+        assertApproximatelyEqual(result.x, 3.2);
+        assertApproximatelyEqual(result.y, 0.4);
+      });
+    });
+
+    describe('三元一次方程组', () => {
+      it('简单三元方程组', () => {
+        const result = solveSystem('x + y + z = 6; x - y + z = 2; x + y - z = 0');
+        assertApproximatelyEqual(result.x, 1);
+        assertApproximatelyEqual(result.y, 2);
+        assertApproximatelyEqual(result.z, 3);
+      });
+
+      it('带系数的三元方程组', () => {
+        const result = solveSystem('2x + y - z = 8; x - 2y + 3z = 1; 3x + 2y + z = 9');
+        assertApproximatelyEqual(result.x, 3.625);
+        assertApproximatelyEqual(result.y, -0.375);
+        assertApproximatelyEqual(result.z, -1.125);
+      });
+    });
+
+    describe('带括号的方程组', () => {
+      it('括号表达式', () => {
+        const result = solveSystem('2(x + y) = 6; x - y = 1');
+        assertApproximatelyEqual(result.x, 2);
+        assertApproximatelyEqual(result.y, 1);
+      });
+
+      it('复杂括号表达式', () => {
+        const result = solveSystem('3(x - 1) + 2y = 5; 2x + (y + 1) = 4');
+        assertApproximatelyEqual(result.x, -2);
+        assertApproximatelyEqual(result.y, 7);
+      });
+    });
+
+    describe('不同变量名', () => {
+      it('使用不同变量名', () => {
+        const result = solveSystem('a + b = 5; a - b = 1');
+        assertApproximatelyEqual(result.a, 3);
+        assertApproximatelyEqual(result.b, 2);
+      });
+
+      it('混合变量名', () => {
+        const result = solveSystem('x + y = 5; x + z = 6; y + z = 7');
+        assertApproximatelyEqual(result.x, 2);
+        assertApproximatelyEqual(result.y, 3);
+        assertApproximatelyEqual(result.z, 4);
+      });
+    });
+  });
+
+  describe('错误情况测试', () => {
+    it('方程数量少于变量数量', () => {
+      assert.throws(
+        () => solveSystem('x + y = 5'),
+        (error) => {
+          return error.message.includes('方程数量') && error.message.includes('少于变量数量');
+        },
+        '应该抛出关于方程数量不足的错误'
+      );
+    });
+
+    it('无方程', () => {
+      assert.throws(
+        () => solveSystem(''),
+        (error) => {
+          return error.message.includes('未提供方程');
+        },
+        '应该抛出未提供方程的错误'
+      );
+    });
+
+    it('无变量', () => {
+      assert.throws(
+        () => solveSystem('2 = 2; 3 = 3'),
+        (error) => {
+          return error.message.includes('未找到变量');
+        },
+        '应该抛出未找到变量的错误'
+      );
+    });
+
+    it('方程组无解', () => {
+      assert.throws(
+        () => solveSystem('x + y = 5; x + y = 10'),
+        (error) => {
+          return error.message.includes('无解');
+        },
+        '应该抛出无解的错误'
+      );
+    });
+
+    it('语法错误', () => {
+      assert.throws(
+        () => solveSystem('x + y = 5; x + y'),
+        (error) => {
+          return error.message.includes('语法分析失败');
+        },
+        '应该抛出语法分析失败的错误'
       );
     });
   });
