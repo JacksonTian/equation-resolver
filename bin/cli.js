@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import readline from 'readline';
-import { solveEquation, solveSystem } from '../lib/solve.js';
+import { solve } from '../lib/solve.js';
 
 function main() {
   const args = process.argv.slice(2);
@@ -10,15 +10,14 @@ function main() {
   if (args.length > 0) {
     const input = args.join(' ');
     try {
-      // 检查是否包含分号（方程组）
-      if (input.includes(';')) {
-        const result = solveSystem(input);
+      const result = solve(input);
+      // 检查返回格式：如果是对象且没有 variable 属性，说明是方程组
+      if (result.variable !== undefined) {
+        console.log(`${result.variable} = ${result.value}`);
+      } else {
         for (const [variable, value] of Object.entries(result)) {
           console.log(`${variable} = ${value}`);
         }
-      } else {
-        const result = solveEquation(input);
-        console.log(`${result.variable} = ${result.value}`);
       }
     } catch (error) {
       console.error('错误:', error.message);
@@ -52,16 +51,15 @@ function main() {
     }
     
     try {
-      // 检查是否包含分号（方程组）
-      if (input.includes(';')) {
-        const result = solveSystem(input);
+      const result = solve(input);
+      // 检查返回格式：如果是对象且没有 variable 属性，说明是方程组
+      if (result.variable !== undefined) {
+        console.log(`${result.variable} = ${result.value}\n`);
+      } else {
         for (const [variable, value] of Object.entries(result)) {
           console.log(`${variable} = ${value}`);
         }
         console.log();
-      } else {
-        const result = solveEquation(input);
-        console.log(`${result.variable} = ${result.value}\n`);
       }
     } catch (error) {
       console.error('错误:', error.message, '\n');

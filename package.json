@@ -8,9 +8,10 @@
     "solve": "./bin/cli.js"
   },
   "scripts": {
+    "dev": "node --test",
     "test": "node --test test/*.test.js",
-    "test:coverage": "c8 npm run test",
-    "test:coverage:report": "c8 --reporter=html --reporter=text npm run test",
+    "test:cov": "c8 --reporter=html --reporter=text npm run test",
+    "dev:cov": "c8 --reporter=html --reporter=text npm run dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

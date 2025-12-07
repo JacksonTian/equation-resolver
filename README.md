@@ -36,6 +36,20 @@ node bin/cli.js
 ### 作为模块使用
 
 ```javascript
+import { solve } from './lib/solve.js';
+
+// 单变量方程（自动检测）
+const result = solve('2x + 3 = 7');
+console.log(result); // { variable: 'x', value: 2 }
+
+// 多元一次方程组（用分号分隔）
+const systemResult = solve('x + y = 5; x - y = 1');
+console.log(systemResult); // { x: 3, y: 2 }
+```
+
+为了向后兼容，也提供了 `solveEquation` 和 `solveSystem` 函数：
+
+```javascript
 import { solveEquation, solveSystem } from './lib/solve.js';
 
 // 单变量方程
