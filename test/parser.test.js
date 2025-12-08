@@ -11,8 +11,8 @@ function parse(input) {
 
 describe('Parser', () => {
 
-  describe('方程解析', () => {
-    it('应该解析简单方程', () => {
+  describe('equation parsing', () => {
+    it('should parse simple equation', () => {
       const ast = parse('x = 5');
       assert.strictEqual(ast.type, 'EQUATION_SYSTEM');
       assert.strictEqual(ast.equations.length, 1);
@@ -24,7 +24,7 @@ describe('Parser', () => {
       assert.strictEqual(equation.right.value, '5');
     });
 
-    it('应该解析简单方程，分号可选，不影响解析', () => {
+    it('should parse simple equation, semicolon is optional', () => {
       const ast = parse('x = 5;');
       assert.strictEqual(ast.type, 'EQUATION_SYSTEM');
       assert.strictEqual(ast.equations.length, 1);
@@ -36,7 +36,7 @@ describe('Parser', () => {
       assert.strictEqual(equation.right.value, '5');
     });
 
-    it('应该解析两个方程的方程组', () => {
+    it('should parse two equations equation system', () => {
       const ast = parse('x = 5; y = 1');
       assert.strictEqual(ast.type, 'EQUATION_SYSTEM');
       assert.strictEqual(ast.equations.length, 2);
@@ -187,7 +187,6 @@ describe('Parser', () => {
       assert.strictEqual(ast.type, 'EQUATION_SYSTEM');
       assert.strictEqual(ast.equations.length, 1);
       const equation = ast.equations[0];
-      console.log(equation);
       assert.strictEqual(equation.type, 'EQUATION');
       assert.strictEqual(equation.left.type, 'BINARY_OP');
       assert.strictEqual(equation.left.op, '*');
@@ -223,18 +222,43 @@ describe('Parser', () => {
           return true;
         }
       );
+
+      assert.throws(
+        () => parse('2x'),
+        (error) => {
+          assert.strictEqual(error.message, 'Expected EQUALS，but got EOF');
+          return true;
+        }
+      );
     });
 
     it('should throw error when parentheses are not matched', () => {
       assert.throws(
         () => parse('(x + 1'),
         (error) => {
-          console.log(error);
           assert.strictEqual(error.message, 'Expected RPAREN，but got EOF');
           return true;
         }
       );
     });
+
+    it('should throw error when missing variable', () => {
+      assert.throws(
+        () => parse('2x ='),
+        (error) => {
+          assert.strictEqual(error.message, 'Unexpected token: EOF, expected NUMBER, VARIABLE, LPAREN');
+          return true;
+        }
+      );
+    });
+
+    it('should throw error when missing left side', () => {
+      assert.throws(
+        () => parse('= 5'),
+        (error) => {
+          assert.strictEqual(error.message, 'Unexpected token: EQUALS, expected NUMBER, VARIABLE, LPAREN');
+          return true;
+        });
+    });
   });
 });
-

@@ -21,7 +21,6 @@ describe('SemanticChecker', () => {
     assert.throws(
       () => check('2 = 5'),
       (error) => {
-        console.log(error.stack);
         assert.strictEqual(error.message, 'Equation does not contain any variables');
         return true;
       }
