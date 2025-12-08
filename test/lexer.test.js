@@ -53,21 +53,39 @@ describe('Lexer', () => {
       const lexer = new Lexer('abc');
       const token = lexer.getNextToken();
       assert.strictEqual(token.type, 'VARIABLE');
-      assert.strictEqual(token.value, 'abc');
+      assert.strictEqual(token.value, 'a');
+      const token2 = lexer.getNextToken();
+      assert.strictEqual(token2.type, 'VARIABLE');
+      assert.strictEqual(token2.value, 'b');
+      const token3 = lexer.getNextToken();
+      assert.strictEqual(token3.type, 'VARIABLE');
+      assert.strictEqual(token3.value, 'c');
     });
 
     it('应该识别大写变量', () => {
       const lexer = new Lexer('XYZ');
       const token = lexer.getNextToken();
       assert.strictEqual(token.type, 'VARIABLE');
-      assert.strictEqual(token.value, 'XYZ');
+      assert.strictEqual(token.value, 'X');
+      const token2 = lexer.getNextToken();
+      assert.strictEqual(token2.type, 'VARIABLE');
+      assert.strictEqual(token2.value, 'Y');
+      const token3 = lexer.getNextToken();
+      assert.strictEqual(token3.type, 'VARIABLE');
+      assert.strictEqual(token3.value, 'Z');
     });
 
     it('应该识别混合大小写变量', () => {
       const lexer = new Lexer('xYz');
       const token = lexer.getNextToken();
       assert.strictEqual(token.type, 'VARIABLE');
-      assert.strictEqual(token.value, 'xYz');
+      assert.strictEqual(token.value, 'x');
+      const token2 = lexer.getNextToken();
+      assert.strictEqual(token2.type, 'VARIABLE');
+      assert.strictEqual(token2.value, 'Y');
+      const token3 = lexer.getNextToken();
+      assert.strictEqual(token3.type, 'VARIABLE');
+      assert.strictEqual(token3.value, 'z');
     });
 
     it('应该识别多个变量', () => {
@@ -364,7 +382,13 @@ describe('Lexer', () => {
       const lexer = new Lexer('xyz');
       const token = lexer.getNextToken();
       assert.strictEqual(token.type, 'VARIABLE');
-      assert.strictEqual(token.value, 'xyz');
+      assert.strictEqual(token.value, 'x');
+      const token2 = lexer.getNextToken();
+      assert.strictEqual(token2.type, 'VARIABLE');
+      assert.strictEqual(token2.value, 'y');
+      const token3 = lexer.getNextToken();
+      assert.strictEqual(token3.type, 'VARIABLE');
+      assert.strictEqual(token3.value, 'z');
     });
 
     it('应该处理数字和运算符混合', () => {
@@ -377,7 +401,7 @@ describe('Lexer', () => {
           tokens.push(token);
         }
       } while (token.type !== 'EOF');
-      
+
       assert.strictEqual(tokens.length, 9);
       assert.strictEqual(tokens[0].type, 'NUMBER');
       assert.strictEqual(tokens[1].type, 'PLUS');
