@@ -1,31 +1,12 @@
 #!/usr/bin/env node
 
 import readline from 'readline';
-import { solve } from '../lib/solve.js';
+import { Lexer } from '../lib/lexer.js';
+import { Parser } from '../lib/parser.js';
+import { SemanticChecker } from '../lib/semantic-checker.js';
+import { Evaluator } from '../lib/evaluator.js';
 
 function main() {
-  const args = process.argv.slice(2);
-
-  // 如果有参数，直接求解并退出
-  if (args.length > 0) {
-    const input = args.join(' ');
-    try {
-      const result = solve(input);
-      // 检查返回格式：如果是对象且没有 variable 属性，说明是方程组
-      if (result.variable !== undefined) {
-        console.log(`${result.variable} = ${result.value}`);
-      } else {
-        for (const [variable, value] of Object.entries(result)) {
-          console.log(`${variable} = ${value}`);
-        }
-      }
-    } catch (error) {
-      console.error('错误:', error.message);
-      process.exit(1);
-    }
-    return;
-  }
-
   // 进入 REPL 模式
   const rl = readline.createInterface({
     input: process.stdin,
@@ -51,20 +32,26 @@ function main() {
     }
     
     try {
-      const result = solve(input);
-      // 检查返回格式：如果是对象且没有 variable 属性，说明是方程组
-      if (result.variable !== undefined) {
-        console.log(`${result.variable} = ${result.value}\n`);
-      } else {
-        for (const [variable, value] of Object.entries(result)) {
-          console.log(`${variable} = ${value}`);
-        }
-        console.log();
+        // 词法分析
+      const lexer = new Lexer(input);
+      
+      // 语法分析
+      const parser = new Parser(lexer);
+      const ast = parser.parse();
+
+      const checker = new SemanticChecker(ast);
+      checker.check();
+
+      const evaluator = new Evaluator(ast);
+      const result = evaluator.solve();
+      for (const [variable, value] of Object.entries(result)) {
+        console.log(`${variable} = ${value}`);
       }
+      console.log();
     } catch (error) {
       console.error('错误:', error.message, '\n');
     }
-    
+
     rl.prompt();
   });
   
@@ -75,4 +62,3 @@ function main() {
 }
 
 main();
-
