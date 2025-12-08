@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "解方程程序",
-  "main": "lib/solve.js",
+  "main": "lib/index.js",
   "bin": {
     "solve": "./bin/cli.js"
   },

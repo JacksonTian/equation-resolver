@@ -1,21 +1,26 @@
 # 方程求解器
 
+[![npm version](https://img.shields.io/npm/v/@jacksontian/equation-resolver.svg)](https://www.npmjs.com/package/@jacksontian/equation-resolver)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![GitHub repository](https://img.shields.io/badge/GitHub-repository-blue.svg)](https://github.com/JacksonTian/equation-resolver)
+
 一个使用词法分析、语法分析和语义分析实现的方程求解程序。
 
 ## 功能特性
 
 - 支持线性方程求解
 - **支持多元一次方程组求解**（用分号分隔多个方程）
-- 支持隐式乘法（如 `2x`, `x(`, `)x`）
+- 支持隐式乘法（如 `2x`, `x(`, `)x`, `xy`, `x2`）
 - 支持括号表达式
 - 支持除法表达式（如 `8 / 2x = 2`）
-- 支持多变量方程（求解第一个变量）
-- 支持非线性方程（使用数值方法）
+- 使用分数（Fraction）类进行精确计算，避免浮点数精度丢失
+- 使用高斯消元法求解线性方程组
 
 ## 安装
 
 ```bash
-npm install
+npm install @jacksontian/equation-resolver -g
 ```
 
 ## 使用方法
@@ -23,41 +28,42 @@ npm install
 ### 命令行工具
 
 ```bash
-# 单次求解
-node bin/cli.js "2x = 4"
+# REPL 模式（交互式求解）
+solve
 
-# 求解方程组（用分号分隔）
-node bin/cli.js "x + y = 5; x - y = 1"
+# 在 REPL 中输入方程求解
+> 2x = 4
+x = 2
 
-# REPL 模式
-node bin/cli.js
+> x + y = 5; x - y = 1
+x = 3
+y = 2
+
+> exit  # 退出
 ```
 
 ### 作为模块使用
 
 ```javascript
-import { solve } from './lib/solve.js';
+import { Lexer, Parser, SemanticChecker, Evaluator } from '@jacksontian/equation-resolver';
 
-// 单变量方程（自动检测）
+// 单变量方程
+function solve(input) {
+  const lexer = new Lexer(input);
+  const parser = new Parser(lexer);
+  const ast = parser.parse();
+  const checker = new SemanticChecker(ast);
+  checker.check();
+  const evaluator = new Evaluator(ast);
+  return evaluator.solve();
+}
+
+// 使用示例
 const result = solve('2x + 3 = 7');
-console.log(result); // { variable: 'x', value: 2 }
+console.log(result); // { x: 2 }
 
 // 多元一次方程组（用分号分隔）
 const systemResult = solve('x + y = 5; x - y = 1');
-console.log(systemResult); // { x: 3, y: 2 }
-```
-
-为了向后兼容，也提供了 `solveEquation` 和 `solveSystem` 函数：
-
-```javascript
-import { solveEquation, solveSystem } from './lib/solve.js';
-
-// 单变量方程
-const result = solveEquation('2x + 3 = 7');
-console.log(result); // { variable: 'x', value: 2 }
-
-// 多元一次方程组
-const systemResult = solveSystem('x + y = 5; x - y = 1');
 console.log(systemResult); // { x: 3, y: 2 }
 ```
 
@@ -74,11 +80,8 @@ npm test
 ### 测试覆盖率
 
 ```bash
-# 生成文本覆盖率报告
-npm run test:coverage
-
 # 生成 HTML 和文本覆盖率报告
-npm run test:coverage:report
+npm run test:cov
 ```
 
 HTML 报告会生成在 `coverage/index.html`。
@@ -97,21 +100,15 @@ HTML 报告会生成在 `coverage/index.html`。
 - 多变量方程
 - 错误情况（恒等式、矛盾方程、语法错误等）
 
-## 当前测试覆盖率
-
-- 语句覆盖率：75.04%
-- 分支覆盖率：87.09%
-- 函数覆盖率：84.61%
-- 行覆盖率：75.04%
-
 ## 技术实现
 
-- **词法分析器（Lexer）**：将输入字符串转换为 token 流
-- **语法分析器（Parser）**：使用递归下降解析器构建抽象语法树（AST）
-- **语义分析器（Evaluator）**：遍历 AST 求解方程
-- **方程组求解**：使用高斯消元法求解多元一次方程组
+- **词法分析器（Lexer）**：将输入字符串转换为 token 流，支持数字、变量、运算符、括号等
+- **语法分析器（Parser）**：使用递归下降解析器构建抽象语法树（AST），支持隐式乘法
+- **语义检查器（SemanticChecker）**：检查方程是否包含变量，验证 AST 的有效性
+- **求值器（Evaluator）**：遍历 AST 求解方程，支持单方程和方程组
+- **分数类（Fraction）**：使用分数进行精确计算，避免浮点数精度丢失
+- **方程组求解**：使用高斯消元法求解多元一次方程组，支持部分主元选择
 
 ## 许可证
 
-MIT
-
+The MIT License
