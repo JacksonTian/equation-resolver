@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@jacksontian/equation-resolver.svg)](https://www.npmjs.com/package/@jacksontian/equation-resolver)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![codecov](https://codecov.io/gh/JacksonTian/equation-resolver/branch/main/graph/badge.svg)](https://codecov.io/gh/JacksonTian/equation-resolver)
 [![GitHub repository](https://img.shields.io/badge/GitHub-repository-blue.svg)](https://github.com/JacksonTian/equation-resolver)
 
 一个使用词法分析、语法分析和语义分析实现的方程求解程序。
