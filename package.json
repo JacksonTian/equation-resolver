@@ -5,8 +5,12 @@
   "description": "解方程程序",
   "main": "lib/index.js",
   "bin": {
-    "solve": "./bin/cli.js"
+    "solve": "bin/cli.js"
   },
+  "files": [
+    "lib",
+    "bin"
+  ],
   "scripts": {
     "dev": "node --test",
     "test": "node --test test/*.test.js",
@@ -22,7 +26,7 @@
   "author": "Jackson Tian",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JacksonTian/equation-resolver.git"
+    "url": "git+https://github.com/JacksonTian/equation-resolver.git"
   },
   "homepage": "https://github.com/JacksonTian/equation-resolver",
   "license": "MIT",
