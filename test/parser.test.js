@@ -201,6 +201,31 @@ describe('Parser', () => {
       assert.strictEqual(equation.right.type, 'NUMBER');
       assert.strictEqual(equation.right.value, '1');
     }); 
+
+    it('should support division in equations', () => {
+      const ast = parse('9/3x-45=15');
+      assert.strictEqual(ast.type, 'EQUATION_SYSTEM');
+      assert.strictEqual(ast.equations.length, 1);
+      const equation = ast.equations[0];
+      assert.deepStrictEqual(equation, {
+        type: 'EQUATION',
+        left: {
+          type: 'BINARY_OP',
+          op: '-',
+          left: {
+            type: 'BINARY_OP',
+            op: '/',
+            left: { type: 'NUMBER', value: '9' },
+            right: { type: 'BINARY_OP', op: '*', left: { type: 'NUMBER', value: '3' }, right: { type: 'VARIABLE', name: 'x' } },
+          },
+          right: {
+            type: 'NUMBER',
+            value: '45',
+          },
+        },
+        right: { type: 'NUMBER', value: '15' },
+      });
+    });
   });
 
   describe('Exceptions', () => {
