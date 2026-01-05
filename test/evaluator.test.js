@@ -227,4 +227,16 @@ describe('solve', () => {
       );
     });
   });
+
+  describe('附加用例', () => {
+    it('附加用例1', () => {
+      const result = solve('(6x-10)/x=3.5');
+      assert.strictEqual(result.x, 4);
+    });
+
+    it('附加用例2', () => {
+      const result = solve('9/3x-45=15');
+      assert.strictEqual(result.x, 0.05);
+    });
+  });
 });
